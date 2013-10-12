@@ -1,0 +1,12 @@
+{
+    "port": 7000,
+    "database_credentials": {
+        "mongodb": {
+            "username": "",
+            "password": "",
+            "database": "Coachwhip",
+            "hostname": "localhost",
+            "port": "27017"
+        }
+    }
+}

@@ -1,8 +1,6 @@
-"""  app = Coachwhip() 
-"""
-
 import json 
 from http_.server import Server
+from routing.router import Router
 
 class Coachwhip():
     def __init__(self):
@@ -12,27 +10,50 @@ class Coachwhip():
         configuration.close()
         self.configuration = data
 
-        # self.router = Router()
+        self.router = Router()
         # self.logger = Logger()
 
-    def get(self):
-        self.registerRouteHandler(args)
+    """
+        Once an app instance has been obtained, with app = Coachwhip(), 
+        routes can be defined like so:
+            
+            @app.get('/hello_world')
+            def helloWorldHandler():
+                print('Handling /hello_world')
 
-    def  post(self):
-        self.registerRouteHandler(args)
+        This is achieved using a decorator function
+    """
+    def get(self, url, **kwargs):
+        def decorator(fn):
+            self.registerRouteHandler('get', url, fn, kwargs)
+            return fn
+        return decorator
+        
+    def post(self, url, **kwargs):
+        def decorator(fn):
+            self.registerRouteHandler('post', url, fn, kwargs)
+            return fn
+        return decorator
 
-    def delete(self):
-        self.registerRouteHandler(args)
+    def delete(self, url, **kwargs):
+        def decorator(fn):
+            self.registerRouteHandler('delete', url, fn, kwargs)
+            return fn
+        return decorator
 
-    def put(self):
-        self.registerRouteHandler(args)
+    def put(self, url, **kwargs):
+        def decorator(fn):
+            self.registerRouteHandler('put', url, fn, kwargs)
+            return fn
+        return decorator
 
-    def registerRouteHandler(self):
-        print('Registering route handler')
+    def registerRouteHandler(self, verb, url, fn, kwargs):
+        self.router.addRoute(verb, url, fn, kwargs)
 
     def listen(self, port=None):
-        port = port if port else self.configuration.port
+        print(self.configuration)
+        port = port if port else self.configuration['port']
         self.bootServer(port)
 
     def bootServer(self, port):
-        Server(port).listen();
+        Server(port, self.router).listen();

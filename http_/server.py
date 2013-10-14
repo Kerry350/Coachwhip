@@ -1,4 +1,4 @@
-from http.server import HTTPServer
+from wsgiref.simple_server import make_server
 from http_.request import requestClassFactory 
 
 """
@@ -10,9 +10,7 @@ from http_.request import requestClassFactory
 class Server():
     def __init__(self, port, router):
         self.port = port
-        requestHandler = requestClassFactory(router.routeMap)
-        print(requestHandler().routeMap)
-        self.serverInstance = HTTPServer(('127.0.0.1', port), requestHandler)
+        self.serverInstance = make_server('127.0.0.1', port, router.handleRequest)
 
     def listen(self):
         print('"Listening on port {0} "'.format(self.port))
